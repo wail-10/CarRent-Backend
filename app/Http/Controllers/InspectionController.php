@@ -6,6 +6,7 @@ use App\Mail\InspectionDetails;
 use App\Models\Inspection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class InspectionController extends Controller
 {
@@ -108,16 +109,44 @@ class InspectionController extends Controller
         $email = $request->input('email');
         $caseType = $request->input('caseType');
 
-        $tempFilePath = tempnam(sys_get_temp_dir(), 'inspection_') . '.pdf';
+        // $tempFilePath = tempnam(sys_get_temp_dir(), 'inspection_') . '.pdf';
 
-        file_put_contents($tempFilePath, file_get_contents($pdfFile->getRealPath()));
+        // file_put_contents($tempFilePath, file_get_contents($pdfFile->getRealPath()));
 
-        Mail::to($email)->send(new InspectionDetails($tempFilePath, $caseType));
+        Mail::to($email)->send(new InspectionDetails($pdfFile, $caseType));
 
-        unlink($tempFilePath);
+        // unlink($tempFilePath);
 
         // Respond with success message
         return response()->json(['message' => 'PDF received and email processed successfully']);
+    }
+
+    public function sendPDFV2(Request $request)
+    {
+        // Validate request
+        $request->validate([
+            'pdf' => 'required|file|mimes:pdf',
+            'email' => 'required|email',
+            'caseType' => 'required|string'
+        ]);
+
+        // Handle the file
+        $pdf = $request->file('pdf');
+        
+        // Handle other data
+        $email = $request->input('email');
+        $caseType = $request->input('caseType');
+
+        $tempFilePath = tempnam(sys_get_temp_dir(), 'inspection_') . '.pdf';
+        file_put_contents($tempFilePath, file_get_contents($pdf->getRealPath()));
+        
+        // Send the email with the PDF attachment
+        Mail::to($email)->send(new InspectionDetails($tempFilePath, $caseType));
+        // Mail::to($validatedData['email'])->send(new InspectionDetails($pdfPath, $validatedData['caseType']));
+
+        return response()->json([
+            'message' => 'Email sent successfully with the PDF attachment.',
+        ]);
     }
 
 }

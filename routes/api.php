@@ -29,4 +29,5 @@ Route::get('customers/{inspectionId}', [CustomerController::class, 'getCustomers
 
 // Send PDF
 Route::post('/send-pdf', [InspectionController::class, 'sendPdf']);
+Route::post('/send-pdf-v2', [InspectionController::class, 'sendPDFV2']);
 
