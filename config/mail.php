@@ -55,7 +55,7 @@ return [
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             // 'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
-            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'https://69b0-197-144-4-13.ngrok-free.app'), PHP_URL_HOST)),
+            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'https://1d4b-197-144-57-86.ngrok-free.app'), PHP_URL_HOST)),
         ],
 
         'ses' => [
